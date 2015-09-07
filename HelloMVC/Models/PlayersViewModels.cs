@@ -1,4 +1,5 @@
-﻿namespace HelloMVC.Models
+﻿
+namespace HelloMVC.Models
 {
     public class PlayersViewModel
     {
@@ -9,5 +10,11 @@
         public int Age { get; set; }
         public string TeamName { get; set; }
         public bool IsDelete { get; set; }
+    }
+
+    public enum Sex
+    {
+        Female=0,
+        Male=1
     }
 }

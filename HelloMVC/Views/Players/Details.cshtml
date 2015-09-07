@@ -1,4 +1,4 @@
-﻿@model HelloMVC.Models.Player
+﻿@model HelloMVC.Models.PlayersViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -11,11 +11,11 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.PlayerName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.PlayerName)
         </dd>
 
         <dt>
@@ -43,16 +43,16 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.TeamID)
+            @Html.DisplayNameFor(model => model.TeamName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.TeamID)
+            @Html.DisplayFor(model => model.TeamName)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.ID }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PlayerID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

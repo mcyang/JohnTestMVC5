@@ -17,7 +17,6 @@ namespace HelloMVC.Controllers
         // GET: Players
         public ActionResult Index()
         {
-            
             var query = from p in db.Players.Where(m => m.IsDelete == false)
                         join t in db.Teams on p.TeamID equals t.ID
                         select new {p, t.Name };
@@ -46,17 +45,43 @@ namespace HelloMVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Player player = db.Players.Find(id);
-            if (player == null)
+
+            var query = (from player in db.Players.Where(m => m.IsDelete == false)
+                        join team in db.Teams on player.TeamID equals team.ID
+                        select new { player, team.Name }).Where(m => m.player.ID == id).First();
+
+            PlayersViewModel playersVM = new PlayersViewModel();
+            playersVM.PlayerID = query.player.ID;
+            playersVM.PlayerName = query.player.Name;
+            playersVM.Height = query.player.Height ?? 0;
+            playersVM.Weight = query.player.Weight ?? 0;
+            playersVM.Age = query.player.Age ?? 0;
+            playersVM.TeamName = query.Name;
+
+            //Player player = db.Players.Find(id);
+            if (playersVM == null)
             {
                 return HttpNotFound();
             }
-            return View(player);
+            return View(playersVM);
         }
 
         // GET: Players/Create
         public ActionResult Create()
         {
+            //建立下拉選單-資料來源:Team資料表
+            List<SelectListItem> items = new List<SelectListItem>();    //下拉選單容器
+            var query = db.Teams.Where(p => p.IsDelete == false);       //資料來源
+            foreach (var q in query)
+            {
+                items.Add(new SelectListItem()
+                {
+                    Text = q.Name,
+                    Value = q.ID.ToString()
+                });
+            }
+            ViewData["TeamList"] = items;   //將做好的下拉選單打包給ViewData做前後台的傳遞
+
             return View();
         }
 
@@ -84,6 +109,20 @@ namespace HelloMVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            //建立下拉選單-資料來源:Team資料表
+            List<SelectListItem> items = new List<SelectListItem>();    //下拉選單容器
+            var query = db.Teams.Where(p => p.IsDelete == false);       //資料來源
+            foreach (var q in query)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = q.Name,
+                    Value = q.ID.ToString()
+                });
+            }
+            ViewData["TeamList"] = items;   //將做好的下拉選單打包給ViewData做前後台的傳遞
+
             Player player = db.Players.Find(id);
             if (player == null)
             {
@@ -115,12 +154,24 @@ namespace HelloMVC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Player player = db.Players.Find(id);
-            if (player == null)
+
+            var query = (from player in db.Players.Where(m => m.IsDelete == false)
+                         join team in db.Teams on player.TeamID equals team.ID
+                         select new { player, team.Name }).Where(m => m.player.ID == id).First();
+
+            PlayersViewModel playersVM = new PlayersViewModel();
+            playersVM.PlayerID = query.player.ID;
+            playersVM.PlayerName = query.player.Name;
+            playersVM.Height = query.player.Height ?? 0;
+            playersVM.Weight = query.player.Weight ?? 0;
+            playersVM.Age = query.player.Age ?? 0;
+            playersVM.TeamName = query.Name;
+
+            if (playersVM == null)
             {
                 return HttpNotFound();
             }
-            return View(player);
+            return View(playersVM);
         }
 
         // POST: Players/Delete/5
@@ -129,7 +180,7 @@ namespace HelloMVC.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Player player = db.Players.Find(id);
-            db.Players.Remove(player);
+            player.IsDelete = true;
             db.SaveChanges();
             return RedirectToAction("Index");
         }
