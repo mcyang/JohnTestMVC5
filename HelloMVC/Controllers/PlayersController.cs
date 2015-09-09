@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using HelloMVC.Models;
+using NPOI.HSSF.UserModel;
+using System.IO;
 
 namespace HelloMVC.Controllers
 {
@@ -90,16 +90,36 @@ namespace HelloMVC.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Height,Weight,Age,TeamID,IsDelete")] Player player)
+        public ActionResult Create(FormCollection fc) //[Bind(Include = "ID,Name,Height,Weight,Age,TeamID,IsDelete")] Player player
         {
+            // 透過FormCollection將表單的資料打包回後端，並作前處理
+            string name = fc["Name"];
+            double height = 0;
+            double weight = 0;
+            int age = 0;
+            int teamid = 0;
+
+            //資料前處理
+            double.TryParse(fc["Height"], out height);
+            double.TryParse(fc["Weight"],out weight);
+            int.TryParse(fc["Age"], out age);
+            int.TryParse(fc["TeamList"],out teamid);
+
             if (ModelState.IsValid)
             {
+                Player player = new Player();
+                player.Name = name;
+                player.Height = height;
+                player.Weight = weight;
+                player.Age = age;
+                player.TeamID = teamid;
+
                 db.Players.Add(player);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(player);
+            return View();
         }
 
         // GET: Players/Edit/5
@@ -183,6 +203,72 @@ namespace HelloMVC.Controllers
             player.IsDelete = true;
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        // GET: Excel處理頁面
+        public ActionResult Excel()
+        {
+            return View();
+        }
+
+        // GET: Excel處理頁面
+        public ActionResult Open()
+        {
+            HSSFWorkbook workbook = new HSSFWorkbook(); // for .xls
+            //NPOI.XSSF.UserModel.XSSFWorkbook workbook = new NPOI.XSSF.UserModel.XSSFWorkbook(); // for .xlsx
+            MemoryStream ms = new MemoryStream();
+            
+            // 新增試算表。 
+            NPOI.SS.UserModel.ISheet sheet = workbook.CreateSheet("試算表 A");
+            workbook.CreateSheet("試算表 B");
+            workbook.CreateSheet("試算表 C");
+
+            // 建立儲存格樣式。 
+            NPOI.SS.UserModel.ICellStyle style1 = workbook.CreateCellStyle();
+            style1.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Blue.Index2;
+            style1.FillPattern = NPOI.SS.UserModel.FillPattern.SolidForeground;
+            NPOI.SS.UserModel.ICellStyle style2 = workbook.CreateCellStyle();
+            style2.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Yellow.Index2;
+            style2.FillPattern = NPOI.SS.UserModel.FillPattern.SolidForeground;
+
+            //// 插入資料值。 
+            //sheet.CreateRow(0).CreateCell(0).SetCellValue("0");
+            //sheet.CreateRow(1).CreateCell(0).SetCellValue("1");
+            //sheet.CreateRow(2).CreateCell(0).SetCellValue("2");
+            //sheet.CreateRow(3).CreateCell(0).SetCellValue("3");
+            //sheet.CreateRow(4).CreateCell(0).SetCellValue("4");
+            //sheet.CreateRow(5).CreateCell(0).SetCellValue("5");
+
+            // 設定儲存格樣式與資料。 
+            NPOI.SS.UserModel.ICell cell = sheet.CreateRow(0).CreateCell(0);
+            cell.CellStyle = style1;
+            cell.SetCellValue(0);
+
+            cell = sheet.CreateRow(1).CreateCell(0);
+            cell.CellStyle = style2;
+            cell.SetCellValue(1);
+
+            cell = sheet.CreateRow(2).CreateCell(0);
+            cell.CellStyle = style1;
+            cell.SetCellValue(2);
+
+            cell = sheet.CreateRow(3).CreateCell(0);
+            cell.CellStyle = style2;
+            cell.SetCellValue(3);
+
+            cell = sheet.CreateRow(4).CreateCell(0);
+            cell.CellStyle = style1;
+            cell.SetCellValue(4);
+
+            workbook.Write(ms);
+            Response.AddHeader("Content-Disposition", string.Format("attachment; filename=EmptyWorkbook.xls"));
+            Response.BinaryWrite(ms.ToArray());
+
+            workbook = null;
+            ms.Close();
+            ms.Dispose();
+
+            return View();
         }
 
         protected override void Dispose(bool disposing)
