@@ -6,7 +6,11 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
+using NPOI.SS.UserModel;
 using HelloMVC.Models;
+using System.Collections;
+using LinqToExcel;
 
 namespace HelloMVC.Controllers
 {
@@ -17,7 +21,6 @@ namespace HelloMVC.Controllers
         // GET: Teams
         public ActionResult Index()
         {
-
             return View(db.Teams.Where(m=>m.IsDelete==false).ToList());
         }
 
@@ -113,6 +116,41 @@ namespace HelloMVC.Controllers
             Team team = db.Teams.Find(id);
             team.IsDelete = true;
             db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public ActionResult Importexcel(HttpPostedFileBase file)
+        {
+            //if (Request.Files["FileUpload1"].ContentLength > 0)
+            //{
+            //    string extension = Path.GetExtension(Request.Files["FileUpload1"].FileName); // Get FileName
+            //    string path = string.Format("{0}/{1}", Server.MapPath("~/Content/UploadedFolder"), Request.Files["FileUpload1"].FileName);
+
+            //    if(System.IO.File.Exists(path)){
+            //        System.IO.File.Delete(path);
+            //    }
+            //    Request.Files["FileUpload1"].SaveAs(path);
+
+            //    //Use LinqToExcel
+            //    var excel = new ExcelQueryFactory(path);
+            //    var workSheetNames = excel.GetWorksheetNames();
+            //}
+
+            if (file.ContentLength > 0)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var path = Path.Combine(Server.MapPath("~/Content/UploadedFolder"), fileName);
+                file.SaveAs(path);
+
+                var excel = new ExcelQueryFactory(path);
+                var workSheetNames = excel.GetWorksheetNames();
+                var content = from item in excel.Worksheet(0)
+                              select item;
+
+            }
+            
+
             return RedirectToAction("Index");
         }
 
