@@ -12,16 +12,16 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.GetEnumerator().Current.PlayerName)
+            @Html.DisplayNameFor(model => model.GetEnumerator().Current.player.Name)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.GetEnumerator().Current.Height)
+            @Html.DisplayNameFor(model => model.GetEnumerator().Current.player.Height)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.GetEnumerator().Current.Weight)
+            @Html.DisplayNameFor(model => model.GetEnumerator().Current.player.Weight)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.GetEnumerator().Current.Age)
+            @Html.DisplayNameFor(model => model.GetEnumerator().Current.player.Age)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.GetEnumerator().Current.TeamName)
@@ -32,24 +32,24 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.PlayerName)
+            @Html.DisplayFor(modelItem => item.player.Name)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Height)
+            @Html.DisplayFor(modelItem => item.player.Height)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Weight)
+            @Html.DisplayFor(modelItem => item.player.Weight)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Age)
+            @Html.DisplayFor(modelItem => item.player.Age)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.TeamName)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.PlayerID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.PlayerID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.PlayerID })
+            @Html.ActionLink("Edit", "Edit", new { id=item.player.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.player.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.player.ID })
         </td>
     </tr>
 }

@@ -19,17 +19,13 @@ namespace HelloMVC.Controllers
         {
             var query = from p in db.Players.Where(m => m.IsDelete == false)
                         join t in db.Teams on p.TeamID equals t.ID
-                        select new {p, t.Name };
-
+                        select new { p , t.Name };
+        
             List<PlayersViewModel> list = new List<PlayersViewModel>();
             foreach (var q in query)
             {
                 PlayersViewModel playersVM = new PlayersViewModel();
-                playersVM.PlayerID = q.p.ID;
-                playersVM.PlayerName = q.p.Name;
-                playersVM.Height = q.p.Height ?? 0;
-                playersVM.Weight = q.p.Weight ?? 0;
-                playersVM.Age = q.p.Age ?? 0;
+                playersVM.player = q.p;
                 playersVM.TeamName = q.Name;
 
                 list.Add(playersVM);
@@ -51,11 +47,7 @@ namespace HelloMVC.Controllers
                         select new { player, team.Name }).Where(m => m.player.ID == id).First();
 
             PlayersViewModel playersVM = new PlayersViewModel();
-            playersVM.PlayerID = query.player.ID;
-            playersVM.PlayerName = query.player.Name;
-            playersVM.Height = query.player.Height ?? 0;
-            playersVM.Weight = query.player.Weight ?? 0;
-            playersVM.Age = query.player.Age ?? 0;
+            playersVM.player = query.player;
             playersVM.TeamName = query.Name;
 
             //Player player = db.Players.Find(id);
@@ -130,7 +122,14 @@ namespace HelloMVC.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            //建立下拉選單-資料來源:Team資料表
+            Player playerData = db.Players.Find(id);
+            if (playerData == null)
+            {
+                return HttpNotFound();
+            }
+            
+
+            //建立下拉選單方法1-資料來源:Team資料表
             List<SelectListItem> items = new List<SelectListItem>();    //下拉選單容器
             var query = db.Teams.Where(p => p.IsDelete == false);       //資料來源
             foreach (var q in query)
@@ -138,17 +137,26 @@ namespace HelloMVC.Controllers
                 items.Add(new SelectListItem
                 {
                     Text = q.Name,
-                    Value = q.ID.ToString()
+                    Value = q.ID.ToString(),
+                    Selected = q.ID.Equals(playerData.TeamID)
                 });
             }
-            ViewData["TeamList"] = items;   //將做好的下拉選單打包給ViewData做前後台的傳遞
+            ViewBag.TeamSelectListItem = items;   //將做好的下拉選單打包給ViewBag做前後台的傳遞
 
-            Player player = db.Players.Find(id);
-            if (player == null)
+            //建立下拉選單方法2-資料來源:Team資料表
+            SelectList selectlist = new SelectList(query,"ID","Name");
+            ViewBag.TeamSelectList = selectlist;
+
+            //建立下拉選單方法3-將資料塞到ViewModel
+            SelectList DDL_TeamList = new SelectList(query, "ID", "Name",playerData.TeamID);
+            PlayersViewModel viewModel = new PlayersViewModel()
             {
-                return HttpNotFound();
-            }
-            return View(player);
+                player = playerData,
+                TeamList = DDL_TeamList
+            };
+
+
+            return View(viewModel);
         }
 
         // POST: Players/Edit/5
@@ -156,15 +164,18 @@ namespace HelloMVC.Controllers
         // 詳細資訊，請參閱 http://go.microsoft.com/fwlink/?LinkId=317598。
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Height,Weight,Age,TeamID,IsDelete")] Player player)
+        public ActionResult Edit(PlayersViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                Player player = new Player();
+                player = viewModel.player;
+
                 db.Entry(player).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(player);
+            return View(viewModel);
         }
 
         // GET: Players/Delete/5
@@ -180,11 +191,7 @@ namespace HelloMVC.Controllers
                          select new { player, team.Name }).Where(m => m.player.ID == id).First();
 
             PlayersViewModel playersVM = new PlayersViewModel();
-            playersVM.PlayerID = query.player.ID;
-            playersVM.PlayerName = query.player.Name;
-            playersVM.Height = query.player.Height ?? 0;
-            playersVM.Weight = query.player.Weight ?? 0;
-            playersVM.Age = query.player.Age ?? 0;
+            playersVM.player = query.player;
             playersVM.TeamName = query.Name;
 
             if (playersVM == null)

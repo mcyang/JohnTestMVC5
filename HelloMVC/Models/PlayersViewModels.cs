@@ -1,15 +1,18 @@
-﻿
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
+
 namespace HelloMVC.Models
 {
     public class PlayersViewModel
     {
-        public int PlayerID { get; set; }
-        public string PlayerName { get; set; }
-        public double Height { get; set; }
-        public double Weight { get; set; }
-        public int Age { get; set; }
+        // 與 dbo.Player 一模一樣
+        public Player player { get; set; }
+
+        // dbo.Player.TeamID 關連到 dbo.Team 取得的Name
         public string TeamName { get; set; }
-        public bool IsDelete { get; set; }
+
+        // dbo.Team的下拉選單
+        public IEnumerable<SelectListItem> TeamList { get; set; }
     }
 
     public enum Sex

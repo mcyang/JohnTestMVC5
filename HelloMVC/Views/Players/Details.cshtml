@@ -11,35 +11,35 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.PlayerName)
+            @Html.DisplayNameFor(model => model.player.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.PlayerName)
+            @Html.DisplayFor(model => model.player.Name)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Height)
+            @Html.DisplayNameFor(model => model.player.Height)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Height)
+            @Html.DisplayFor(model => model.player.Height)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Weight)
+            @Html.DisplayNameFor(model => model.player.Weight)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Weight)
+            @Html.DisplayFor(model => model.player.Weight)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Age)
+            @Html.DisplayNameFor(model => model.player.Age)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Age)
+            @Html.DisplayFor(model => model.player.Age)
         </dd>
 
         <dt>
@@ -53,6 +53,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.PlayerID }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.player.ID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
