@@ -144,7 +144,7 @@ namespace HelloMVC.Controllers
             ViewBag.TeamSelectListItem = items;   //將做好的下拉選單打包給ViewBag做前後台的傳遞
 
             //建立下拉選單方法2-資料來源:Team資料表
-            SelectList selectlist = new SelectList(query,"ID","Name");
+            SelectList selectlist = new SelectList(query,"ID","Name", playerData.TeamID);
             ViewBag.TeamSelectList = selectlist;
 
             //建立下拉選單方法3-將資料塞到ViewModel

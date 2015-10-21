@@ -1,5 +1,6 @@
 ﻿@*@model HelloMVC.Models.Player*@
 @model HelloMVC.Models.PlayersViewModel
+@using HelloMVC.Helpers
 
 @{
     ViewBag.Title = "Edit";
@@ -53,9 +54,7 @@
         <div class="form-group">
             @Html.Label("所屬球隊", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @*@Html.DropDownList("DDL_Team", (IEnumerable<SelectListItem>)ViewBag.TeamSelectListItem)*@
-                @*@Html.DropDownList("TeamSelectList")*@
-                @Html.DropDownListFor(model => model.player.TeamID, Model.TeamList)
+                <span>使用自訂DDL</span>@Html.DDL_Team("DDL", Model.player.TeamID, false, null)
             </div>
         </div>
 
