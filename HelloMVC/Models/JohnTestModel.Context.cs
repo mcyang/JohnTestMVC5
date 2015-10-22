@@ -27,5 +27,6 @@ namespace HelloMVC.Models
     
         public virtual DbSet<Player> Players { get; set; }
         public virtual DbSet<Team> Teams { get; set; }
+        public virtual DbSet<Friend> Friends { get; set; }
     }
 }
