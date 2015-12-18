@@ -1,0 +1,21 @@
+﻿@model IEnumerable<HelloMVC.Models.Player>
+<p>Fuck</p>
+
+<table>
+    <tr>
+        <th>球員</th>
+        <th>身高</th>
+        <th>體重</th>
+    </tr>
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name)</td>
+                <td>@item.Height</td>
+                <td>@item.Weight</td>
+            </tr>
+        }
+    }
+</table>

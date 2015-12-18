@@ -162,5 +162,29 @@ namespace HelloMVC.Controllers
             }
             base.Dispose(disposing);
         }
+
+        public ActionResult TeamMasterDetails(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Team team = db.Teams.Find(id);
+            if (team == null)
+            {
+                return HttpNotFound();
+            }
+            return View(team);
+        }
+
+        public ActionResult PlayersDetailsView(Team team)
+        {
+            if (team == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            List<Player> list = db.Players.Where(m => m.TeamID == team.ID).AsEnumerable().ToList();
+            return PartialView(list);
+        }
     }
 }

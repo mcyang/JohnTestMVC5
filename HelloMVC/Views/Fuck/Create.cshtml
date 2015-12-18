@@ -1,0 +1,23 @@
+﻿@model HelloMVC.ViewModels.FuckViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+@using (Html.BeginForm("Create", "Fuck", FormMethod.Post, new { id = "ListForm" }))
+{
+    for (int i = 0; i < Model.fuckList.Count; i++)
+    {
+        <div>
+            @Html.EditorFor(m => m.fuckList[i].Name)
+        </div>
+        <div>
+            @Html.RadioButtonFor(m => m.fuckList[i].IsOK, true, new { @Name ="Fuck"+i })
+            @Html.RadioButtonFor(m => m.fuckList[i].IsOK, false, new { @Name = "Fuck" + i })
+        </div>
+
+    }
+
+    <input type="submit" value="儲存" class="btn btn-success" />
+}

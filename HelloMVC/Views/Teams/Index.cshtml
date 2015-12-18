@@ -1,9 +1,32 @@
 ﻿@using System.Web.Mvc
+@using Mvc.RazorTools.FontAwesome
 @model IEnumerable<HelloMVC.Models.Team>
 
 @{
     ViewBag.Title = "Index";
 }
+
+@section Styles{
+    <style type="text/css">
+    .f_class {
+        width: 250px;
+        height: 35px;
+        margin: 5px;
+        border: 1px solid #777;
+        float: left;
+        -webkit-box-sizing: border-box;
+        color: Black;
+    }
+
+    input[type="file"].f_class::-webkit-file-upload-button {
+        float: right;
+        position: relative;
+        top: -1px;
+        right: -1px;
+        height: 35px;
+    }
+</style>
+    }
 
 <h2>球隊列表</h2>
 
@@ -11,17 +34,22 @@
 
 @using (Html.BeginForm("Importexcel", "Teams", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <table>
-        <tr>
-            <td>匯入Excel</td>
-            <td><input type="file" id="file" name="file" /></td>
-            <td><input type="submit" id="Submit" name="Submit" value="Submit" /></td>
-        </tr>
-    </table>
+
+    <div class="form-group">
+        @Html.Label("上傳附件", htmlAttributes: new { @class = "control-label fa-2x" })
+        <label class="btn btn-default">
+            <input type="file" id="file" name="file" style="background-color: #FFF8C0;"  class="f_class"/>
+            @Html.ValidationMessage("file", new { @class = "text-danger" })
+            <button type="submit" class="btn btn-success fa-lg">
+                <i class="fa fa-cloud-upload"></i> 上傳
+            </button>
+        </label>
+
+    </div>
 }
 
 <p>
-    @Html.ActionLink("新增", "Create")
+@Html.ActionLink("新增", "Create",null, new { @class= "fa fa-plus fa-2x btn btn-success" })
 </p>
 
 <table class="table">

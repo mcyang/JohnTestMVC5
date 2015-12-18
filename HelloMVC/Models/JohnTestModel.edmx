@@ -14,6 +14,14 @@
           <Property Name="Birthday" Type="datetime" Nullable="false" />
           <Property Name="BirthdayMonth" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="Fuck">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="IsOK" Type="bit" />
+        </EntityType>
         <EntityType Name="Players">
           <Key>
             <PropertyRef Name="ID" />
@@ -26,6 +34,18 @@
           <Property Name="TeamID" Type="int" Nullable="false" />
           <Property Name="IsDelete" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="ReportProblem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="CreateOn" Type="datetime" Nullable="false" />
+          <Property Name="CreateBy" Type="int" Nullable="false" />
+          <Property Name="ModifyOn" Type="datetime" Nullable="false" />
+          <Property Name="ModifyBy" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Teams">
           <Key>
             <PropertyRef Name="ID" />
@@ -37,7 +57,9 @@
         </EntityType>
         <EntityContainer Name="JohnTestModelStoreContainer">
           <EntitySet Name="Friend" EntityType="Self.Friend" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Fuck" EntityType="Self.Fuck" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Players" EntityType="Self.Players" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ReportProblem" EntityType="Self.ReportProblem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Teams" EntityType="Self.Teams" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -69,6 +91,8 @@
           <EntitySet Name="Players" EntityType="Self.Player" />
           <EntitySet Name="Teams" EntityType="Self.Team" />
           <EntitySet Name="Friends" EntityType="JohnTestModel.Friend" />
+          <EntitySet Name="Fucks" EntityType="JohnTestModel.Fuck" />
+          <EntitySet Name="ReportProblems" EntityType="JohnTestModel.ReportProblem" />
         </EntityContainer>
         <EntityType Name="Friend">
           <Key>
@@ -78,6 +102,26 @@
           <Property Name="Name" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="Birthday" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="BirthdayMonth" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Fuck">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="IsOK" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="ReportProblem">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateBy" Type="Int32" Nullable="false" />
+          <Property Name="ModifyOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ModifyBy" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -114,6 +158,28 @@
                 <ScalarProperty Name="BirthdayMonth" ColumnName="BirthdayMonth" />
                 <ScalarProperty Name="Birthday" ColumnName="Birthday" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Fucks">
+            <EntityTypeMapping TypeName="JohnTestModel.Fuck">
+              <MappingFragment StoreEntitySet="Fuck">
+                <ScalarProperty Name="IsOK" ColumnName="IsOK" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ReportProblems">
+            <EntityTypeMapping TypeName="JohnTestModel.ReportProblem">
+              <MappingFragment StoreEntitySet="ReportProblem">
+                <ScalarProperty Name="ModifyBy" ColumnName="ModifyBy" />
+                <ScalarProperty Name="ModifyOn" ColumnName="ModifyOn" />
+                <ScalarProperty Name="CreateBy" ColumnName="CreateBy" />
+                <ScalarProperty Name="CreateOn" ColumnName="CreateOn" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
